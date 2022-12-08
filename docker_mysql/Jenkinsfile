@@ -16,10 +16,10 @@ pipeline{
     stages{
         stage('BUILD DOCKER IMAGE FOR DOCKERHUB') { 
             steps { 
-                script { 
-                    // dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "_$BUILD_TIMESTAMP"
-                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "/docker_mysql./"
-                }
+                dir('/var/lib/jenkins/workspace/CREATE_DOCKER_APPLICATION_PIPELINE/docker_mysql') {
+                sh "pwd"
+                dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER"
+                 }
             } 
         }
         stage("PUSH DOCKER IMAGE TO DOCKERHUB"){
@@ -41,3 +41,12 @@ pipeline{
                 }
             }
     }
+
+
+
+
+steps {
+    dir('your-sub-directory') {
+      sh "pwd"
+    }
+} 
