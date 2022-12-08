@@ -11,9 +11,6 @@ pipeline{
     environment{
         registry_dockerhub = "zhajili/petclinic-app"
         registryCredential_dockerhub = 'dockerhub'
-        // registryCredentials_ECR = 'ecr:us-east-1:cicdjenkins'
-        // imagename = "866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops"
-        // applicationRegistry = 'https://866308211434.dkr.ecr.us-east-1.amazonaws.com'
     }
 
     stages{
@@ -32,18 +29,11 @@ pipeline{
                 }
             }
         }
-        // stage("BUILD DOCKER IMAGE FOR AWS"){
-        //     steps{
-        //         script{
-        //             dockerImage = docker.build(imagename + ":$BUILD_ID" + "_$BUILD_TIMESTAMP",".")
-        //         }
-        //     }
-        // }
 
         stage('BUILD DOCKER IMAGE FOR DOCKERHUB') { 
             steps { 
                 script { 
-                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" 
+                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "_$BUILD_TIMESTAMP"
                 }
             } 
         }
@@ -56,16 +46,6 @@ pipeline{
                 } 
             }
         }
-        // stage("Upload Docker image to AWS ECR"){
-        //     steps{
-        //         script{
-        //             docker.withRegistry (applicationRegistry,registryCredentials_ECR){
-        //                 dockerImage.push("$BUILD_ID")
-        //                 dockerImage.push("latest")
-        //             }
-        //         }
-        //     }
-        // }
     }
     post {
     always {
