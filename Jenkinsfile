@@ -32,13 +32,13 @@ pipeline{
                 }
             }
         }
-        stage("BUILD DOCKER IMAGE FOR AWS"){
-            steps{
-                script{
-                    dockerImage = docker.build(imagename + ":$BUILD_ID" + "_$BUILD_TIMESTAMP",".")
-                }
-            }
-        }
+        // stage("BUILD DOCKER IMAGE FOR AWS"){
+        //     steps{
+        //         script{
+        //             dockerImage = docker.build(imagename + ":$BUILD_ID" + "_$BUILD_TIMESTAMP",".")
+        //         }
+        //     }
+        // }
 
         stage('BUILD DOCKER IMAGE FOR DOCKERHUB') { 
             steps { 
