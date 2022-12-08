@@ -33,11 +33,12 @@ pipeline{
         stage('BUILD DOCKER IMAGE FOR DOCKERHUB') { 
             steps { 
                 script { 
-                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "_$BUILD_TIMESTAMP"
+                    // dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "_$BUILD_TIMESTAMP"
+                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER"
                 }
             } 
         }
-        stage("Upload Docker image to DockerHub"){
+        stage("PUSH DOCKER IMAGE TO DOCKERHUB"){
             steps{
                 script { 
                     docker.withRegistry( '', registryCredential_dockerhub ) { 
