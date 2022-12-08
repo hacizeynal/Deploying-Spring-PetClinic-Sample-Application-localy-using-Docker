@@ -13,9 +13,13 @@ FROM base as build
 RUN ./mvnw package
 
 FROM eclipse-temurin:17-jre-jammy as production
+ENV MYSQL_URL=jdbc:mysql://petclinic_database/petclinic
 EXPOSE 8080
 COPY --from=build /app/target/spring-petclinic-*.jar /spring-petclinic.jar
 # CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/spring-petclinic.jar"]
 CMD ["java", "-Dspring.profiles.active=mysql", "-jar", "/spring-petclinic.jar"]
 
-# docker run --rm -d --name petclinic_application --network petclinic-net -e MYSQL_URL=jdbc:mysql://petclinic_database/petclinic -p 8080:8080 zhajili/petclinic-app:1.9
+
+# docker network create petclinic-net
+# docker run --rm -d --name petclinic_application --network petclinic-net -p 8080:8080 zhajili/petclinic-app:1.9
+
