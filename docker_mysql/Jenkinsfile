@@ -18,7 +18,7 @@ pipeline{
             steps { 
                 script { 
                     // dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER"
-                    dockerImage = docker.build("$registry_dockerhub:$BUILD_NUMBER", "-f ./docker_mysql/Dockerfile .")
+                    dockerImage = docker.build("$registry_dockerhub:$BUILD_NUMBER", "-f ./docker_mysql/Dockerfile")
                 }
             } 
         }
