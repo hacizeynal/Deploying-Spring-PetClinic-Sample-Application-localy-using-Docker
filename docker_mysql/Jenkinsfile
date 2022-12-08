@@ -1,0 +1,43 @@
+def COLOR_MAP = [
+    'SUCCESS': 'good', 
+    'FAILURE': 'danger',
+]
+pipeline{
+    agent any
+    tools{
+        maven "MAVEN3"
+        jdk "JDK"
+    }
+    environment{
+        registry_dockerhub = "zhajili/petclinic-mysql"
+        registryCredential_dockerhub = 'dockerhub'
+    }
+
+    stages{
+        stage('BUILD DOCKER IMAGE FOR DOCKERHUB') { 
+            steps { 
+                script { 
+                    // dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "_$BUILD_TIMESTAMP"
+                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "/docker_mysql./"
+                }
+            } 
+        }
+        stage("PUSH DOCKER IMAGE TO DOCKERHUB"){
+            steps{
+                script { 
+                    docker.withRegistry( '', registryCredential_dockerhub ) { 
+                        dockerImage.push() 
+                    }
+                } 
+            }
+        }
+    }
+    post {
+    always {
+        echo 'Slack Notifications.'
+        slackSend channel: '#jenkins',
+            color: COLOR_MAP[currentBuild.currentResult],
+            message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
+            }
+    }
