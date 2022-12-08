@@ -33,21 +33,28 @@ pipeline{
                 }
             }
         }
-        stage("Build Docker Image"){
+        stage("BUILD DOCKER IMAGE FOR AWS"){
             steps{
                 script{
                     dockerImage = docker.build(imagename + ":$BUILD_ID" + "_$BUILD_TIMESTAMP",".")
                 }
             }
         }
+
+        stage('BUILD DOCKER IMAGE FOR DOCKERHUB') { 
+            steps { 
+                script { 
+                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" 
+                }
+            } 
+        }
         stage("Upload Docker image to DockerHub"){
             steps{
-                script{
-                    docker.withRegistry ("",registryCredential_dockerhub){
-                        dockerImage.push("$BUILD_ID")
-
+                script { 
+                    docker.withRegistry( '', registryCredential_dockerhub ) { 
+                        dockerImage.push() 
                     }
-                }
+                } 
             }
         }
         stage("Upload Docker image to AWS ECR"){
