@@ -17,7 +17,8 @@ pipeline{
         stage('BUILD DOCKER IMAGE FOR DOCKERHUB') { 
             steps { 
                 script { 
-                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "-f ./docker_mysql/Dockerfile ."
+                    // dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER"
+                    dockerImage = docker.build("my-image:$BUILD_NUMBER", "-f /docker_mysql/.")
                 }
             } 
         }
