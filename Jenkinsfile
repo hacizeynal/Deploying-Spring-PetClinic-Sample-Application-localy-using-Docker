@@ -36,7 +36,7 @@ pipeline{
         stage("Build Docker Image"){
             steps{
                 script{
-                    dockerImage = docker.build(imagename + ":$BUILD_ID" + "_$BUILD_TIMESTAMP","./Docker-files/app/multistage/")
+                    dockerImage = docker.build(imagename + ":$BUILD_ID" + "_$BUILD_TIMESTAMP",".")
                 }
             }
         }
