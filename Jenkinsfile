@@ -42,9 +42,12 @@ pipeline{
         }
         stage("Upload Docker image to DockerHub"){
             steps{
-                script {
-                    docker.build registry_dockerhub + ":$BUILD_ID"
-                }   
+                script{
+                    docker.withRegistry ("",registryCredential_dockerhub){
+                        dockerImage.push("$BUILD_ID")
+
+                    }
+                }
             }
         }
         stage("Upload Docker image to AWS ECR"){
@@ -52,7 +55,6 @@ pipeline{
                 script{
                     docker.withRegistry (applicationRegistry,registryCredentials_ECR){
                         dockerImage.push("$BUILD_ID")
-                        // dockerImage.push("$BUILD_TIMESTAMP")
                         dockerImage.push("latest")
                     }
                 }
