@@ -289,7 +289,7 @@ We will build 2 different pipelines for different docker containers and as you c
 
 [![Screenshot-2022-12-09-at-14-13-39.png](https://i.postimg.cc/HnhN1NLf/Screenshot-2022-12-09-at-14-13-39.png)](https://postimg.cc/XB9LwQd8)
 
-As seen from Jenkinsfile ,we are also adding BUILD_ID as tag to the docker image.
+As seen from Jenkinsfile ,we are also adding BUILD_ID as tag to the docker image ,optionally we can also add TIMESTAMP.
 
 
 
