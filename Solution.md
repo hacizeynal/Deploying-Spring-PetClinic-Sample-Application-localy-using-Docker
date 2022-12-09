@@ -217,7 +217,82 @@ We can see that we have our docker images with correct tag and they are already 
 
 ## Subtask 4
 
-Now we will need to build all previous tasks via CI tool Jenkins ,our Jenkins is already preconfigured and ready to use. We will have 2 different Jenkins Job which will build and upload docker container to the ECR and DockerHub.
+Now we will need to build all previous tasks via CI tool Jenkins ,our Jenkins is already preconfigured and ready to use. We will have 2 different Jenkins Job which will build and upload docker container DockerHub.
+
+Jenkinsfile is decribed below
+
+```
+
+def COLOR_MAP = [
+    'SUCCESS': 'good', 
+    'FAILURE': 'danger',
+]
+pipeline{
+    agent any
+    tools{
+        maven "MAVEN3"
+        jdk "JDK"
+    }
+    environment{
+        registry_dockerhub = "zhajili/petclinic-app"
+        registryCredential_dockerhub = 'dockerhub'
+    }
+
+    stages{
+        stage("PACKAGE THE APPLICATION"){
+            //step to skip Unit Tests and pass parameters from settings.xml and install dependencies locally.
+            steps {
+              script{
+                    sh 'mvn -B -DskipTests clean package'
+                }
+              }
+            post{
+                success {
+                echo "Now archiving"
+                archiveArtifacts artifacts: '**/*.jar'
+
+                }
+            }
+        }
+
+        stage('BUILD DOCKER IMAGE FOR DOCKERHUB') { 
+            steps { 
+                script { 
+                    // dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER" + "_$BUILD_TIMESTAMP"
+                    dockerImage = docker.build registry_dockerhub + ":$BUILD_NUMBER"
+                }
+            } 
+        }
+        stage("PUSH DOCKER IMAGE TO DOCKERHUB"){
+            steps{
+                script { 
+                    docker.withRegistry( '', registryCredential_dockerhub ) { 
+                        dockerImage.push() 
+                    }
+                } 
+            }
+        }
+    }
+    post {
+    always {
+        echo 'Slack Notifications.'
+        slackSend channel: '#jenkins',
+            color: COLOR_MAP[currentBuild.currentResult],
+            message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
+            }
+    }
+```
+We will build 2 different pipelines for different docker containers and as you can see both of them are successfully completed and Slack Notification has been sent.
+
+[![Screenshot-2022-12-09-at-14-09-31.png](https://i.postimg.cc/fTSztfDz/Screenshot-2022-12-09-at-14-09-31.png)](https://postimg.cc/bs8c4bZW)
+
+[![Screenshot-2022-12-09-at-14-13-39.png](https://i.postimg.cc/HnhN1NLf/Screenshot-2022-12-09-at-14-13-39.png)](https://postimg.cc/XB9LwQd8)
+
+As seen from Jenkinsfile ,we are also adding BUILD_ID as tag to the docker image.
+
+
+
 
 
 
