@@ -3,8 +3,6 @@
 
 ### Use source code from your GitHub repo
 
-apt upgrade -y 
-
 - Subtask I - Application
     * Add "docker" folder and put there all Dockerfiles and doker-related scripts if any, then commit and push them in your GitHub repo.
     * Install docker on your host machine
