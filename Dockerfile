@@ -21,5 +21,6 @@ CMD ["java", "-Dspring.profiles.active=mysql", "-jar", "/spring-petclinic.jar"]
 
 
 # docker network create petclinic-net
-# docker run --rm -d --name petclinic_application --network petclinic-net -p 8080:8080 zhajili/petclinic-app:1.9
+# docker run --rm -d --name petclinic_application --network petclinic-net -p 8080:8080 zhajili/petclinic-app:40
+
 
